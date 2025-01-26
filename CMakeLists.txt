@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.20)
 project(yolov9-bytetrack-trt)
 
 find_package(CUDA REQUIRED)
@@ -6,10 +6,6 @@ find_package(CUDA REQUIRED)
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-DAPI_EXPORTS)
-
-# Find Eigen library
-find_package(Eigen3 3.3 REQUIRED)
-
 
 # Include CUDA directories
 include_directories(${CUDA_INCLUDE_DIRS})
@@ -43,13 +39,8 @@ set(HEADERS
 
 file(GLOB BYTETRACK_HEADERS "bytetrack/*.h")
 
-# Find and include OpenCV
-set(OpenCV_DIR "D:\\Utils\\opencv\\opencv49_cpu\\build")
-find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
-
 # Set TensorRT path if not set in environment variables
-set(TENSORRT_DIR "D:\\Utils\\TensorRT-8.6.0.12")
+set(TENSORRT_DIR "${PROJECT_SOURCE_DIR}/../../TensorRT-10.8.0.43")
 
 # Include TensorRT
 include_directories(${TENSORRT_DIR}/include)
@@ -59,10 +50,8 @@ set(TENSORRT_LIBS nvinfer nvinfer_plugin nvparsers nvonnxparser)
 # Create an executable
 cuda_add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${CUDA_SOURCES} ${BYTETRACK_HEADERS})
 
-# Link libraries
-target_link_libraries(${PROJECT_NAME}  
-    Eigen3::Eigen
-    ${OpenCV_LIBS}
-    ${CUDA_LIBRARIES}
-    ${TENSORRT_LIBS}
-)
+find_package(OpenCV)
+target_link_libraries(${PROJECT_NAME} opencv::opencv)
+
+find_package(Eigen3 REQUIRED)
+target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)

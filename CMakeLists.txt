@@ -5,7 +5,6 @@ find_package(CUDA REQUIRED)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
-add_definitions(-DAPI_EXPORTS)
 
 # Include CUDA directories
 include_directories(${CUDA_INCLUDE_DIRS})
